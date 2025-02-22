@@ -5,12 +5,13 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
-public class BallLauncher extends GraphicsProgram{
+public class BallLauncher extends GraphicsProgram implements ActionListener{
 	public static final int PROGRAM_HEIGHT = 600;
 	public static final int PROGRAM_WIDTH = 800;
 	public static final int SIZE = 25;
 	public static final int MS = 50;
 	public static final int SPEED = 2;
+	public static final int LIMIT_X = 100;
 	
 	private ArrayList<GOval> balls;
 	private Timer t;
@@ -30,7 +31,14 @@ public class BallLauncher extends GraphicsProgram{
 	}
 	
 	public void mousePressed(MouseEvent e) {
-		GOval ball = makeBall(SIZE/2, e.getY());
+		
+		  for (GOval ball : balls) {
+	            if (ball.getX() < LIMIT_X) {
+	                return; 
+	            }
+	        }
+		  
+		GOval ball = makeBall(e.getX(), e.getY());
 		add(ball);
 		balls.add(ball);
 	}
@@ -41,7 +49,7 @@ public class BallLauncher extends GraphicsProgram{
 		temp.setFilled(true);
 		return temp;
 	}
-	
+	@Override
 	public void actionPerformed(ActionEvent e)
 	{
 		for (GOval ball : balls) {
@@ -54,3 +62,5 @@ public class BallLauncher extends GraphicsProgram{
 	}
 
 }
+
+
