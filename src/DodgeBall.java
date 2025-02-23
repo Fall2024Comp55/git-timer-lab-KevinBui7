@@ -27,6 +27,8 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	public static final int WINDOW_HEIGHT = 600;
 	public static final int WINDOW_WIDTH = 300;
 	
+	private int numTimes = 0;
+	
 	public void run() {
 		rgen = RandomGenerator.getInstance();
 		balls = new ArrayList<GOval>();
@@ -42,6 +44,13 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		moveAllBallsOnce();
+		numTimes++;
+		
+		 if (numTimes % 40 == 0) {
+	            addAnEnemy();
+	        }
+		 
+		 moveAllEnemiesOnce();
 	}
 	
 	public void mousePressed(MouseEvent e) {
@@ -85,6 +94,14 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 			ball.move(SPEED, 0);
 		}
 	}
+	
+	
+	private void moveAllEnemiesOnce() {
+        for(GRect enemy : enemies) {
+            int randomMovement = rgen.nextInt(-2, 2); 
+            enemy.move(0, randomMovement); 
+        }
+    }
 	
 	public void init() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
