@@ -28,6 +28,8 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	public static final int WINDOW_WIDTH = 300;
 	
 	private int numTimes = 0;
+	private int score = 0;
+	private GLabel scoreLabel;
 	
 	public void run() {
 		rgen = RandomGenerator.getInstance();
@@ -36,6 +38,9 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 		
 		text = new GLabel(""+enemies.size(), 0, WINDOW_HEIGHT);
 		add(text);
+		
+		scoreLabel = new GLabel("Score: " + score, 10, WINDOW_HEIGHT - 10);
+	    add(scoreLabel); // Add the score label to the screen
 		
 		movement = new Timer(MS, this);
 		movement.start();
@@ -51,6 +56,25 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	        }
 		 
 		 moveAllEnemiesOnce();
+		 
+		 if (enemies.size() > MAX_ENEMIES) {
+		        gameOver();
+		    }
+	}
+	
+	private void gameOver() {
+	    movement.stop(); 
+	    removeAll(); 
+
+	    GLabel gameOverLabel = new GLabel("Game Over!", WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2);
+	    gameOverLabel.setColor(Color.RED);
+	    add(gameOverLabel);
+
+	    GLabel scoreLabel = new GLabel("Total Score: " + score, WINDOW_WIDTH / 2 - 50, WINDOW_HEIGHT / 2 + 10);
+	    add(scoreLabel);
+	    
+	    GLabel survivalLabel = new GLabel("You survived " + numTimes + " cycles!", WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 40);
+	    add(survivalLabel);
 	}
 	
 	public void mousePressed(MouseEvent e) {
@@ -90,7 +114,6 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	}
 
 	private void moveAllBallsOnce() {
-	    ArrayList<GOval> ballsToRemove = new ArrayList<>();
 	    ArrayList<GRect> enemiesToRemove = new ArrayList<>();
 
 	    for (GOval ball : balls) {
@@ -104,7 +127,8 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	        if (obj instanceof GRect) { 
 	            remove(obj);
 	            enemiesToRemove.add((GRect) obj); 
-	            ballsToRemove.add(ball); 
+	            score++; // Increase score when an enemy is removed
+	            scoreLabel.setLabel("Score: " + score);
 	        }
 	    }
 	    enemies.removeAll(enemiesToRemove);
